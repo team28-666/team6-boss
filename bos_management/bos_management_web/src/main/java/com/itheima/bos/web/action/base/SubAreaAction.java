@@ -1,8 +1,9 @@
 package com.itheima.bos.web.action.base;
 
-import java.io.IOException;
-import java.util.List;
-
+import com.itheima.bos.domain.base.SubArea;
+import com.itheima.bos.service.base.SubAreaService;
+import com.itheima.bos.web.action.CommonAction;
+import net.sf.json.JsonConfig;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -14,12 +15,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 
-import com.itheima.bos.domain.base.Standard;
-import com.itheima.bos.domain.base.SubArea;
-import com.itheima.bos.service.base.SubAreaService;
-import com.itheima.bos.web.action.CommonAction;
-
-import net.sf.json.JsonConfig;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * ClassName:SubAreaAction <br/>
@@ -59,7 +56,7 @@ public class SubAreaAction extends CommonAction<SubArea> {
         Page<SubArea> page = subAreaService.findAll(pageable);
 
         JsonConfig jsonConfig = new JsonConfig();
-        jsonConfig.setExcludes(new String[] {"subareas"});
+        jsonConfig.setExcludes(new String[] {"subareas","fixedArea"});
 
         page2json(page, jsonConfig);
         return NONE;
@@ -71,7 +68,7 @@ public class SubAreaAction extends CommonAction<SubArea> {
 
         List<SubArea> list = subAreaService.findUnAssociatedSubAreas();
         JsonConfig jsonConfig = new JsonConfig();
-        jsonConfig.setExcludes(new String[] {"subareas"});
+        jsonConfig.setExcludes(new String[] {"subareas","fixedArea"});
         list2json(list, jsonConfig);
         return NONE;
     }
@@ -85,6 +82,15 @@ public class SubAreaAction extends CommonAction<SubArea> {
         JsonConfig jsonConfig = new JsonConfig();
         jsonConfig.setExcludes(new String[] {"subareas","couriers"});
         list2json(list, jsonConfig);
+        return NONE;
+    }
+
+    //分区分布图
+    @Action(value = "subAreaAction_chart")
+    public String chart() throws IOException {
+        List<Object[]> list = subAreaService.getChartData();
+        list2json(list,null);
+
         return NONE;
     }
 }

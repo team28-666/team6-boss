@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.itheima.bos.domain.base.FixedArea;
 import com.itheima.bos.domain.base.SubArea;
+import org.springframework.data.jpa.repository.Query;
 
 /**
  * ClassName:SubAreaRepository <br/>
@@ -22,4 +23,7 @@ public interface SubAreaRepository extends JpaRepository<SubArea, Long> {
     // 如果字段是对象，必须是单一对象，不能是集合
     // 传入的参数必须指定id属性
     List<SubArea> findByFixedArea(FixedArea fixedArea);
+
+    @Query("select a.province, count(a.province) from SubArea s inner join s.area a group by a.province")
+    List<Object[]> getChartData();
 }
