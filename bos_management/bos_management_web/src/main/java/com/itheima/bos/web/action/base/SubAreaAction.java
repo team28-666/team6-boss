@@ -1,9 +1,17 @@
 package com.itheima.bos.web.action.base;
 
+import com.itheima.bos.domain.base.Area;
 import com.itheima.bos.domain.base.SubArea;
 import com.itheima.bos.service.base.SubAreaService;
 import com.itheima.bos.web.action.CommonAction;
+import com.itheima.utils.FileDownloadUtils;
+
 import net.sf.json.JsonConfig;
+
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -17,6 +25,11 @@ import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * ClassName:SubAreaAction <br/>
@@ -93,4 +106,84 @@ public class SubAreaAction extends CommonAction<SubArea> {
 
         return NONE;
     }
+    
+    @Action(value = "subArea_exportExcel")
+    public String exportExcel() throws IOException {
+        
+        Page<SubArea> page = subAreaService.findAll(null);
+        List<SubArea> list = page.getContent();
+
+        // 创建了一个excel文件
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        // 创建sheet
+        HSSFSheet sheet = workbook.createSheet();
+        // 创建标题行
+        HSSFRow titleRow = sheet.createRow(0);
+        titleRow.createCell(0).setCellValue("分拣编号");
+        titleRow.createCell(1).setCellValue("省");
+        titleRow.createCell(2).setCellValue("市");
+        titleRow.createCell(3).setCellValue("区");
+        titleRow.createCell(4).setCellValue("关键字");
+        titleRow.createCell(5).setCellValue("起始号");
+        titleRow.createCell(6).setCellValue("终止号");
+        titleRow.createCell(7).setCellValue("单双号");
+        titleRow.createCell(8).setCellValue("辅助关键字");
+
+        // 遍历数据,创建数据行
+        for (SubArea subArea : list) {
+            // 获取最后一行的行号
+            int lastRowNum = sheet.getLastRowNum();
+
+            HSSFRow dataRow = sheet.createRow(lastRowNum + 1);
+            dataRow.createCell(0).setCellValue(subArea.getId());
+            dataRow.createCell(1).setCellValue(subArea.getArea().getProvince());
+            dataRow.createCell(2).setCellValue(subArea.getArea().getCity());
+            dataRow.createCell(3).setCellValue(subArea.getArea().getDistrict());
+            dataRow.createCell(4).setCellValue(subArea.getKeyWords());
+            dataRow.createCell(5).setCellValue(subArea.getStartNum());
+            dataRow.createCell(6).setCellValue(subArea.getEndNum());
+            
+            //判断获得的单双号
+            if(subArea.getSingle().equals('1')) {
+                dataRow.createCell(7).setCellValue("单号");
+            }else {
+                dataRow.createCell(7).setCellValue("双号");
+            }
+            
+            
+            dataRow.createCell(8).setCellValue(subArea.getAssistKeyWords());
+        }
+        // 文件名
+        String filename = "分区数据统计.xls";
+
+        // 一个流两个头
+        HttpServletResponse response = ServletActionContext.getResponse();
+        ServletContext servletContext =
+                ServletActionContext.getServletContext();
+        ServletOutputStream outputStream = response.getOutputStream();
+        HttpServletRequest request = ServletActionContext.getRequest();
+
+        // 获取mimeType
+        // 先获取mimeType再重新编码,避免编码后后缀名丢失,导致获取失败
+        String mimeType = servletContext.getMimeType(filename);
+        // 获取浏览器的类型
+        String userAgent = request.getHeader("User-Agent");
+        // 对文件名重新编码
+        filename =
+                FileDownloadUtils.encodeDownloadFilename(filename, userAgent);
+
+        // 设置信息头
+        response.setContentType(mimeType);
+        response.setHeader("Content-Disposition",
+                "attachment; filename=" + filename);
+
+        // 写出文件
+        workbook.write(outputStream);
+        workbook.close();
+        return NONE;
+        
+        
+    }
+    
+    
 }
