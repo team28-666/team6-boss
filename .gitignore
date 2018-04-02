@@ -4,3 +4,6 @@
 target
 .tern-project
 mylog.log
+/crm/src/main/resources/*.xml
+/bos_management/bos_management_web/src/main/resources/applicationContext.xml
+/common_parent/pom.xml
