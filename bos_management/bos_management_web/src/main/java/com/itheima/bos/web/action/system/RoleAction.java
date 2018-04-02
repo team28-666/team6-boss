@@ -3,6 +3,7 @@ package com.itheima.bos.web.action.system;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -71,7 +72,11 @@ public class RoleAction extends CommonAction<Role> {
     @Action(value = "roleAction_save", results = {@Result(name = "success",
             location = "/pages/system/role.html", type = "redirect")})
     public String save() {
-
+        System.out.println(menuIds);
+        for (Long long1 : permissionIds) {
+            System.out.println(long1);
+        }
+        System.out.println(getModel().getId());
         roleService.save(getModel(), menuIds, permissionIds);
         return SUCCESS;
     }
@@ -87,4 +92,9 @@ public class RoleAction extends CommonAction<Role> {
         list2json(list, jsonConfig);
         return NONE;
     }
+    
+    
+    
+    
+    
 }

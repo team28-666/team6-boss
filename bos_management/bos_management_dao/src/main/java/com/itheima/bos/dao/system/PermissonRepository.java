@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.itheima.bos.domain.system.Menu;
 import com.itheima.bos.domain.system.Permission;
 
 /**
@@ -27,4 +28,9 @@ public interface PermissonRepository extends JpaRepository<Permission, Long> {
     @Query("select p from Permission p inner join p.roles r inner join r.users u where u.id = ?")
     List<Permission> findbyUid(Long uid);
 
+    @Query(value="SELECT *  FROM T_PERMISSION p  WHERE p.C_ID IN ( SELECT C_PERMISSION_ID  FROM T_ROLE_PERMISSION WHERE c_role_id =?)",nativeQuery=true)
+    List<Permission> findbyRoleId(Long id);
+
+    @Query(value="SELECT *  FROM T_PERMISSION  WHERE C_ID NOT IN ( SELECT C_PERMISSION_ID  FROM T_ROLE_PERMISSION WHERE c_role_id =?)",nativeQuery=true)
+    List<Permission> findbyNotRoleId(Long id);
 }
