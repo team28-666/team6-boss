@@ -21,7 +21,9 @@
 	src="../../js/easyui/ext/jquery.cookie.js"></script>
 <script src="../../js/easyui/locale/easyui-lang-zh_CN.js"
 	type="text/javascript"></script>
-<script type="text/javascript" src="../../js/highcharts/highcharts.js"></script>
+	<script type="text/javascript" src="../../js/highcharts/highcharts.js"></script>
+	<script type="text/javascript" src="../../js/highcharts/modules/exporting.js"></script>
+	<script type="text/javascript" src="../../js/highcharts/highcharts-zh_CN.js"></script>
 <script type="text/javascript">
 	function doAdd() {
 		$('#addWindow').window("open");
@@ -39,14 +41,63 @@
 		$('#searchWindow').window("open");
 	}
 
-	//导出按钮绑定的事件
-	function doExport() {
-
+	//导出Excel按钮绑定的事件
+	function doExportExcel() {
+		window.location.href="../../subArea_exportExcel.action"
 	}
 
 	function doImport() {
 		alert("导入");
 	}
+
+    function doShow(){
+        $("#chartWindow").window("open");
+
+        //异步请求数据
+        $.post("../../subAreaAction_chart.action",function (data) {
+            $('#container').highcharts({
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: '分区分布图'
+                },
+                xAxis: {
+                    type: 'category',
+                    labels: {
+                        rotation: -45,
+                        style: {
+                            fontSize: '13px',
+                            fontFamily: 'Verdana, sans-serif'
+                        }
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: '分区分布数 (个)'
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
+                tooltip: {
+                    pointFormat: '分区数: <b>{point.y:1f} 个</b>'
+                },
+                series: [{
+                    data: data,
+                    dataLabels: {
+                        enabled: true,
+                        rotation: -90,
+                        color: '#FFFFFF',
+                        align: 'right',
+                        format: '{point.y:1f}', // one decimal
+                        y: 5, // 10 pixels down from the top
+                    }
+                }]
+            });
+        });
+    }
 
 	//工具栏
 	var toolbar = [ {
@@ -76,10 +127,15 @@
 		handler : doImport
 	}, {
 		id : 'button-export',
-		text : '导出',
+		text : '导出Excel',
 		iconCls : 'icon-undo',
-		handler : doExport
-	} ];
+		handler : doExportExcel
+	},{
+        id : 'button-show',
+        text : '分区分布图',
+        iconCls : 'icon-undo',
+        handler : doShow
+    } ];
 	// 定义列
 	var columns = [ [ {
 		field : 'id',
@@ -184,7 +240,7 @@
 			height : 400,
 			resizable : false
 		});
-
+        //分区柱状图弹窗
 		$('#chartWindow').window({
 			width : 700,
 			modal : true,

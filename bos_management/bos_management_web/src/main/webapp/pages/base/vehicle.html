@@ -26,10 +26,10 @@
 					border : false,
 					rownumbers : true,
 					striped : true,
-					pageList: [30,50,100],
+					pageList: [5,10,15],
 					pagination : true,
 					toolbar : toolbar,
-					url : "../../data/vehicle.json",
+					url : "../../vehicleAction_findByPage.action",
 					idField : 'id',
 					columns : columns
 				});
@@ -41,21 +41,53 @@
 				text : '增加',
 				iconCls : 'icon-add',
 				handler : function(){
-					alert('增加');
+					//每次按增加之前把表单清空
+					$("#vehicleForm").form("clear")
+					$("#vehicleWindow").window("open")
 				}
 			}, {
 				id : 'button-edit',
 				text : '修改',
 				iconCls : 'icon-edit',
 				handler : function(){
-					alert('修改');
+					
+					// 判断用户勾选的数据的条数
+					var result = $("#grid").datagrid("getSelections")
+					if (result.length == 1) {
+						// 勾选一条数据的时候,才可以进行修改
+						// 打开窗口
+						$("#vehicleWindow").window("open")
+						//回填数据到form表单
+						$("#vehicleForm").form("load", result[0])
+					} else {
+						$.messager.alert("提示", "您必须也只能选择一条数据进行修改", "info")
+					}
+					
 				}
 			},{
 				id : 'button-delete',
 				text : '删除',
 				iconCls : 'icon-cancel',
 				handler : function(){
-					alert('删除');
+					
+					var rows = $("#grid").datagrid("getSelections")
+					if(rows.length != 0){
+						
+						$.messager.confirm('删除', '您确定要删除吗？', function(r){
+							if (r){
+								//可能会选择多个删除，创建一个数组存储id值
+								var arr = new Array();
+								for (var i = 0; i < rows.length; i++) {
+									//向数组中插入id值
+									arr.push(rows[i].id)
+								}
+								window.location.href="../../vehicleAction_delete.action?ids="+arr.toString()
+							}
+						});
+					}else{
+						$.messager.alert('提示','你至少要选择一个删除','warning'); 
+					}
+					
 				}
 			} ];
 			
@@ -79,7 +111,7 @@
 				width : 120,
 				align : 'center'
 			}, {
-				field : 'shippers',
+				field : 'shipper',
 				title : '承运商',
 				width : 120,
 				align : 'center'
@@ -109,11 +141,89 @@
 				width : 120,
 				align : 'center'
 			} ] ];
-		</script>
-	</head>
+</script>
+
+<script type="text/javascript">
+	function submitData() {
+		// 校验表单中必填项是否都已经填写了
+		var result = $("#vehicleForm").form("validate")
+		if (result) {
+			// 	提交表单
+			$("#vehicleForm").submit()
+		}
+	}
+</script>
+
+</head>
 	<body class="easyui-layout" style="visibility:hidden;">
 		<div region="center" border="false">
 			<table id="grid"></table>
 		</div>
+		
+		<div class="easyui-window" title="班车管理" id="vehicleWindow"
+		collapsible="false" minimizable="false" maximizable="false"
+		modal="true" closed="true"
+		style="width: 600px; top: 50px; left: 200px">
+		<div region="north" style="height: 31px; overflow: hidden;"
+			split="false" border="false">
+			<div class="datagrid-toolbar">
+				<a id="save" onclick="submitData()" icon="icon-save" href="#"
+					class="easyui-linkbutton" plain="true">保存</a>
+			</div>
+		</div>
+
+		<div region="center" style="overflow: auto; padding: 5px;"
+			border="false">
+
+			<form id="vehicleForm" method="post"
+				action="../../vehicleAction_save.action">
+				<table class="table-edit" width="80%" align="center">
+					<tr class="title">
+						<td colspan="4">班车管理信息 <!--提供隐藏域 装载id --> <input
+							type="hidden" name="id" />
+						</td>
+					</tr>
+					<tr>
+						<td>线路类型</td>
+						<td><input type="text" name="routeType" class="easyui-validatebox"
+							data-options="required:true" /></td>
+						<td>线路名称</td>
+						<td><input type="text" name="routeName"
+							class="easyui-validatebox" required="true" /></td>
+					</tr>
+					<tr>
+						<td>车牌号</td>
+						<td><input type="text" name="vehicleNum"
+							class="easyui-numberbox" required="true" /></td>
+						<td>承运商</td>
+						<td><input type="text" name="shipper"
+							class="easyui-validatebox" required="true" /></td>
+					</tr>
+					<tr>
+						<td>司机</td>
+						<td><input type="text" name="driver"
+							class="easyui-validatebox" required="true" /></td>
+						<td>电话</td>
+						<td><input type="text" name="telephone"
+							class="easyui-numberbox" required="true" /></td>
+					</tr>
+					<tr>
+						<td>车型</td>
+						<td><input type="text" name="vehicleType"
+							class="easyui-validatebox" required="true" /></td>
+						<td>吨控</td>
+						<td><input type="text" name="ton"
+							class="easyui-numberbox" required="true" /></td>
+					</tr>
+					<tr>
+						<td >备注</td>
+						<td ><input type="text" name="remark"
+							class="easyui-validatebox" required="true" /></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+		
 	</body>
 </html>

@@ -56,7 +56,7 @@ public class CommonAction<T> extends ActionSupport implements ModelDriven<T> {
 
     public void page2json(Page<T> page, JsonConfig jsonConfig)
             throws IOException {
-
+        System.out.println();
         // 总数据条数
         long total = page.getTotalElements();
         // 当前页要实现的内容
