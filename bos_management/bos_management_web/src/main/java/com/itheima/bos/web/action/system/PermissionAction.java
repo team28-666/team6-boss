@@ -19,7 +19,9 @@ import com.itheima.bos.domain.system.Permission;
 import com.itheima.bos.service.system.PermissionService;
 import com.itheima.bos.web.action.CommonAction;
 
+import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
+import net.sf.json.processors.JsonBeanProcessor;
 
 /**
  * ClassName:PermissionAction <br/>
@@ -71,35 +73,44 @@ public class PermissionAction extends CommonAction<Permission> {
         Page<Permission> page = permissionService.findAll(null);
         List<Permission> list = page.getContent();
         JsonConfig jsonConfig = new JsonConfig();
-        jsonConfig.setExcludes(new String[] {"roles"});
+        jsonConfig.registerJsonBeanProcessor(Permission.class, new JsonBeanProcessor() {
+            @Override
+            public JSONObject processBean(Object arg0, JsonConfig arg1) {
+                Permission permission = (Permission) arg0;
+                return new JSONObject().element("id", permission.getId()).element("name",
+                        permission.getName());
+            }
+        });
         list2json(list, jsonConfig);
         return NONE;
     }
-    
+
     @Action(value = "permissionAction_findAssociatedRole")
     public String findAssociatedRole() throws IOException {
         // 获取当前用户
-        System.out.println("id="+getModel().getId());
-        List<Permission> list= permissionService.findbyRole(getModel().getId());
-        
+        List<Permission> list = permissionService.findbyRole(getModel().getId());
+
         JsonConfig jsonConfig = new JsonConfig();
-        jsonConfig.setExcludes(
-                new String[] {"roles"});
-        
-        list2json(list, jsonConfig);
-        return NONE;
-    }
-    
-    @Action(value = "permissionAction_findUnAssociatedRole")
-    public String findUnAssociatedRole() throws IOException {
-        // 获取当前用户
-        List<Permission> list= permissionService.findbyNotRole(getModel().getId());
-        
-        JsonConfig jsonConfig = new JsonConfig();
-        jsonConfig.setExcludes(
-                new String[] {"roles"});
+        jsonConfig.registerJsonBeanProcessor(Permission.class, new JsonBeanProcessor() {
+            @Override
+            public JSONObject processBean(Object arg0, JsonConfig arg1) {
+                Permission permission = (Permission) arg0;
+                return new JSONObject().element("id", permission.getId()).element("name",
+                        permission.getName());
+            }
+        });
 
         list2json(list, jsonConfig);
         return NONE;
     }
+
+    /*
+     * @Action(value = "permissionAction_findUnAssociatedRole") public String findUnAssociatedRole()
+     * throws IOException { // 获取当前用户 List<Permission> list=
+     * permissionService.findbyNotRole(getModel().getId());
+     * 
+     * JsonConfig jsonConfig = new JsonConfig(); jsonConfig.setExcludes( new String[] {"roles"});
+     * 
+     * list2json(list, jsonConfig); return NONE; }
+     */
 }

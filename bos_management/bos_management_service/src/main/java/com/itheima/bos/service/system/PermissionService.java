@@ -21,5 +21,5 @@ public interface PermissionService {
     
     List<Permission> findbyRole(Long id);
 
-    List<Permission> findbyNotRole(Long id);
-}
+/*    List<Permission> findbyNotRole(Long id);
+*/}

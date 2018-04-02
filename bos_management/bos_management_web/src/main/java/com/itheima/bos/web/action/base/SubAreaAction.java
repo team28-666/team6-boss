@@ -110,6 +110,7 @@ public class SubAreaAction extends CommonAction<SubArea> {
         
         Page<SubArea> page =
                 subAreaService.findAssociatedSubAreasByPage(getModel().getId(),pageable);
+        System.out.println(page.getContent());
         JsonConfig jsonConfig = new JsonConfig();
         jsonConfig.setExcludes(new String[] {"subareas","couriers"});
         page2json(page, jsonConfig);
