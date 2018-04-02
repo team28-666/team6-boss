@@ -299,9 +299,10 @@
 		</dependency>
 		<dependency>
 			<groupId>com.itheima</groupId>
-			<artifactId>itextAsain</artifactId>
-			<version>1.0.0</version>
+			<artifactId>itextasain</artifactId>
+			<version>10.2.0.2.0</version>
 		</dependency>
+
 
 		<!-- groovy -->
 		<dependency>
