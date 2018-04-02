@@ -25,9 +25,15 @@
 		<property name="driverClass"
 			value="oracle.jdbc.driver.OracleDriver" />
 		<property name="jdbcUrl"
+<<<<<<< HEAD
 			value="jdbc:oracle:thin:@192.168.136.136:1521:ORCL" />
 		<property name="user" value="boss" />
 		<property name="password" value="boss" />
+=======
+			value="jdbc:oracle:thin:@192.168.94.28:1521:ORCL" />
+		<property name="user" value="heima28" />
+		<property name="password" value="heima28" />
+>>>>>>> e7929be3c1d1c84899d8b49eed406f0f41320b73
 	</bean>
 	<!-- spring整合JPA -->
 	<bean id="entityManagerFactory"
