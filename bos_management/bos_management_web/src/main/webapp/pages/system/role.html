@@ -44,53 +44,22 @@
 								$("#roleEditForm").form("load", result[0])
 								$("#permissonTd").html("")
 
-								$.post(
-									"../../permissionAction_findAll.action",
-									function(data) {
-										$.post(
-											"../../permissionAction_findAssociatedRole.action", {
-												"id": result[0].id
-											},
-											function(associated) {
-
-												if(associated.length != "") {
-													for(var i = 0; i < data.length; i++) {
-														var id = data[i].id;
-														var name = data[i].name;
-
-														for(var j = 0; j < associated.length; j++) {
-															var ida = associated[j].id;
-															if(data[i].id == associated[j].id) {
-																$("#permissonTd")
-																	.append(
-																		'<input id="' + id + '" type="checkbox" checked="checked" name="permissionIds" value="' + id + '" /><label for="' + id + '">' +
-																		name + '</label>');
-
-																break;
-															} else if(j == associated.length - 1) {
-																$("#permissonTd")
-																	.append(
-																		'<input id="' + id + '" type="checkbox" name="permissionIds" value="' + id + '" /><label for="' + id + '">' +
-																		name + '</label>');
-
-																break;
-															}
-
-														}
-
-													}
-												} else {
-													for(var i = 0; i < data.length; i++) {
-														var id = data[i].id;
-														var name = data[i].name;
-														$("#permissonTd")
-															.append(
-																'<input id="' + id + '" type="checkbox" name="permissionIds" value="' + id + '" /><label for="' + id + '">' +
-																name + '</label>')
-													}
-												}
-											})
+								$.post("../../permissionAction_findAll.action", function(data) {
+									$(data).each(function(i, n) {
+										$("#permissonTd")
+											.append(
+												'<input id="' + n.id + '" type="checkbox" name="permissionIds" value="' + n.id + '" /><label for="' + n.id + '">' +
+												n.name + '</label>')
 									})
+								}, "json")
+	
+								$.post("../../permissionAction_findAssociatedRole.action",{"id":result[0].id},function(data) {
+									$(data).each(function(i, n) {
+										$("#permissonTd")
+											.find("input[value='"+n.id+"']").attr("checked","checked")
+									})
+								}, "json")
+		
 								var setting = {
 									data: {
 										key: {
@@ -124,25 +93,24 @@
 										var zNodes = eval("(" + data + ")");
 										$.fn.zTree.init($("#menuTree"), setting, zNodes);
 										if(treeNode.length > 0) {
-											
-											 //获取ztree对象
-											
+
+											//获取ztree对象
+
 											var treeObj = $.fn.zTree.getZTreeObj("menuTree");
-											
+
 											//遍历勾选角色关联的菜单数据
-											
+
 											for(var i = 0; i < treeNode.length; i++) {
-												
-												 //根据角色菜单节点数据的属性搜索，获取与完整菜单树完全匹配的节点JSON对象集合
-												
+
+												//根据角色菜单节点数据的属性搜索，获取与完整菜单树完全匹配的节点JSON对象集合
+
 												var nodes = treeObj.getNodesByParam("id", treeNode[i].id, null);
-												
-												 //勾选当前选中的节点
-											 treeObj.checkNode(nodes[0], true, true);
-												
-												
+
+												//勾选当前选中的节点
+												treeObj.checkNode(nodes[0], true, true);
+
 											};
-											
+
 										};
 									},
 									error: function(msg) {

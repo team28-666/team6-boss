@@ -30,8 +30,8 @@ public class StandardRepositoryTest {
 
     @Test
     public void test1() {
-        List<Permission> list = permissonRepository.findbyNotRoleId(1001L);
-        System.out.println(list.size());
+        //List<Permission> list = permissonRepository.findbyNotRoleId(1001L);
+        //System.out.println(list.size());
     }
 
     
