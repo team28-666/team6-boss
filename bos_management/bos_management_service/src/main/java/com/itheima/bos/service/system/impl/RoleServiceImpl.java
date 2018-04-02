@@ -39,11 +39,13 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void save(Role role, String menuIds, Long[] permissionIds) {
-        roleRepository.save(role);
-
+        System.out.println("进入角色save方法");
+        
+        System.out.println(role+"1111111111111");
         if (StringUtils.isNotEmpty(menuIds)) {
             String[] split = menuIds.split(",");
             for (String menuId : split) {
+                System.out.println(menuId+"-------------------------------------------");
                 Menu menu = new Menu();
                 menu.setId(Long.parseLong(menuId));
                 role.getMenus().add(menu);
@@ -52,12 +54,14 @@ public class RoleServiceImpl implements RoleService {
 
         if (permissionIds != null && permissionIds.length > 0) {
             for (Long permissionId : permissionIds) {
+                System.out.println(permissionId+"+++++++++++++++++++++++++++++++++++++");
                 Permission permission = new Permission();
                 permission.setId(permissionId);
                 role.getPermissions().add(permission);
 
             }
         }
+        roleRepository.save(role);
 
     }
 
