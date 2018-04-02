@@ -298,10 +298,11 @@
 			<version>2.1.7</version>
 		</dependency>
 		<dependency>
-			<groupId>com.alpha</groupId>
-			<artifactId>itext</artifactId>
+			<groupId>com.itheima</groupId>
+			<artifactId>itextasain</artifactId>
 			<version>10.2.0.2.0</version>
 		</dependency>
+
 
 		<!-- groovy -->
 		<dependency>

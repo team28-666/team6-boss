@@ -73,13 +73,12 @@ public class AreaAction extends CommonAction<Area> {
         this.file = file;
     }
 
-    @Action(value = "areaAction_importXLS", results = {@Result(name = "success",
-            location = "/pages/base/area.html", type = "redirect")})
+    @Action(value = "areaAction_importXLS", results = {
+            @Result(name = "success", location = "/pages/base/area.html", type = "redirect")})
     public String importXLS() {
 
         try {
-            HSSFWorkbook hssfWorkbook =
-                    new HSSFWorkbook(new FileInputStream(file));
+            HSSFWorkbook hssfWorkbook = new HSSFWorkbook(new FileInputStream(file));
             // 读取第一个工作簿
             HSSFSheet sheet = hssfWorkbook.getSheetAt(0);
             // 储存对象的集合
@@ -99,12 +98,9 @@ public class AreaAction extends CommonAction<Area> {
                 city = city.substring(0, city.length() - 1);
                 district = district.substring(0, district.length() - 1);
                 // 获取城市编码和简码
-                String citycode =
-                        PinYin4jUtils.hanziToPinyin(city, "").toUpperCase();
-                String[] headByString = PinYin4jUtils
-                        .getHeadByString(province + city + district);
-                String shortcode =
-                        PinYin4jUtils.stringArrayToString(headByString);
+                String citycode = PinYin4jUtils.hanziToPinyin(city, "").toUpperCase();
+                String[] headByString = PinYin4jUtils.getHeadByString(province + city + district);
+                String shortcode = PinYin4jUtils.stringArrayToString(headByString);
                 // 封装数据
                 Area area = new Area();
                 area.setProvince(province);
@@ -221,8 +217,7 @@ public class AreaAction extends CommonAction<Area> {
 
         // 一个流两个头
         HttpServletResponse response = ServletActionContext.getResponse();
-        ServletContext servletContext =
-                ServletActionContext.getServletContext();
+        ServletContext servletContext = ServletActionContext.getServletContext();
         ServletOutputStream outputStream = response.getOutputStream();
         HttpServletRequest request = ServletActionContext.getRequest();
 
@@ -232,13 +227,11 @@ public class AreaAction extends CommonAction<Area> {
         // 获取浏览器的类型
         String userAgent = request.getHeader("User-Agent");
         // 对文件名重新编码
-        filename =
-                FileDownloadUtils.encodeDownloadFilename(filename, userAgent);
+        filename = FileDownloadUtils.encodeDownloadFilename(filename, userAgent);
 
         // 设置信息头
         response.setContentType(mimeType);
-        response.setHeader("Content-Disposition",
-                "attachment; filename=" + filename);
+        response.setHeader("Content-Disposition", "attachment; filename=" + filename);
 
         // 写出文件
         workbook.write(outputStream);
@@ -260,15 +253,14 @@ public class AreaAction extends CommonAction<Area> {
     public String exportPDF() throws Exception {
 
         // 读取 jrxml 文件
-        String jrxml = ServletActionContext.getServletContext()
-                .getRealPath("/jasper/area.jrxml");
+        String jrxml = ServletActionContext.getServletContext().getRealPath("/jasper/area.jrxml");
         // 准备需要数据
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("company", "传智播客");
         // 准备需要数据
         JasperReport report = JasperCompileManager.compileReport(jrxml);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(report,
-                parameters, dataSource.getConnection());
+        JasperPrint jasperPrint =
+                JasperFillManager.fillReport(report, parameters, dataSource.getConnection());
 
         HttpServletResponse response = ServletActionContext.getResponse();
         OutputStream ouputStream = response.getOutputStream();
@@ -276,9 +268,8 @@ public class AreaAction extends CommonAction<Area> {
         response.setContentType("application/pdf");
         response.setCharacterEncoding("UTF-8");
         response.setHeader("Content-Disposition",
-                "attachment; filename=" + FileDownloadUtils
-                        .encodeDownloadFilename("工作单.pdf", ServletActionContext
-                                .getRequest().getHeader("user-agent")));
+                "attachment; filename=" + FileDownloadUtils.encodeDownloadFilename("工作单.pdf",
+                        ServletActionContext.getRequest().getHeader("user-agent")));
         // 使用JRPdfExproter导出器导出pdf
         JRPdfExporter exporter = new JRPdfExporter();
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
@@ -288,4 +279,7 @@ public class AreaAction extends CommonAction<Area> {
 
         return NONE;
     }
+    
+    
+
 }
