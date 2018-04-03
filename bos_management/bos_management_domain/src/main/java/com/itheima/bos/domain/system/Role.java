@@ -23,6 +23,12 @@ public class Role implements Serializable {
     @GeneratedValue
     @Column(name = "C_ID")
     private Long id;
+    @Override
+    public String toString() {
+        return "Role [id=" + id + ", name=" + name + ", keyword=" + keyword + ", description="
+                + description ;
+    }
+
     @Column(name = "C_NAME")
     private String name; // 角色名称
     @Column(name = "C_KEYWORD")

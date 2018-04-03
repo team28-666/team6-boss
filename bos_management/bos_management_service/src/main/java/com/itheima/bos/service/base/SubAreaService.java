@@ -23,5 +23,7 @@ public interface SubAreaService {
     List<SubArea> findAssociatedSubAreas(Long fixedAreaId);
 
     List<Object[]> getChartData();
+
+    Page<SubArea> findAssociatedSubAreasByPage(Long id, Pageable pageable);
 }
   

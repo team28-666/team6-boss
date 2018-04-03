@@ -21,11 +21,16 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -95,6 +100,20 @@ public class SubAreaAction extends CommonAction<SubArea> {
         JsonConfig jsonConfig = new JsonConfig();
         jsonConfig.setExcludes(new String[] {"subareas","couriers"});
         list2json(list, jsonConfig);
+        return NONE;
+    }
+    
+    //分页查询 已关联的分区
+    @Action(value = "subAreaAction_findAssociatedSubAreasByPage")
+    public String findAssociatedSubAreasByPage() throws IOException {
+        Pageable pageable = new PageRequest(page-1, rows);
+        
+        Page<SubArea> page =
+                subAreaService.findAssociatedSubAreasByPage(getModel().getId(),pageable);
+        System.out.println(page.getContent());
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[] {"subareas","couriers"});
+        page2json(page, jsonConfig);
         return NONE;
     }
 

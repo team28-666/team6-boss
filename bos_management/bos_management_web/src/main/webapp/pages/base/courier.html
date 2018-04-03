@@ -60,9 +60,31 @@
 		}
 
 	}
-
+	/* 快递员还原 */
 	function doRestore() {
-		alert("将取派员还原...");
+		var rows = $("#grid").datagrid("getSelections")
+		if (rows.length == 0) {
+			$.messager.alert("提示", "你至少要选择一条数据进行操作", "info")
+		} else {
+			$.messager.confirm(
+							'还原对话框',
+							'您确定要还原这些快递员吗？',
+							function(r) {
+								if (r) {
+									// 创建一个数组
+									var arr = new Array();
+									for (var i = 0; i < rows.length; i++) {
+										// 向数组中插入数据
+										arr.push(rows[i].id)
+									}
+
+									// 如何发送请求
+									//form表单, AJAX, window.location.href
+									window.location.href = "../../courierAction_restore.action?ids="
+											+ arr.toString()
+								}
+							});
+		}
 	}
 	// 打开搜索窗口
 	function openSearchWindow() {
@@ -272,46 +294,64 @@
 					</tr>
 					<tr>
 						<td>快递员工号</td>
-						<td><input type="text" name="courierNum"
-							class="easyui-validatebox" required="true" /></td>
+						<td>
+							<input type="text" name="courierNum" class="easyui-validatebox"
+								required="true" />
+						</td>
 						<td>姓名</td>
-						<td><input type="text" name="name" class="easyui-validatebox"
-							required="true" /></td>
+						<td>
+							<input type="text" name="name" class="easyui-validatebox"
+								required="true" />
+						</td>
 					</tr>
 					<tr>
 						<td>手机</td>
-						<td><input type="text" name="telephone"
-							class="easyui-validatebox" required="true" /></td>
+						<td>
+							<input type="text" name="telephone" class="easyui-validatebox"
+								required="true" />
+						</td>
 						<td>所属单位</td>
-						<td><input type="text" name="company"
-							class="easyui-validatebox" required="true" /></td>
+						<td>
+							<input type="text" name="company" class="easyui-validatebox"
+								required="true" />
+						</td>
 					</tr>
 					<tr>
 						<td>查台密码</td>
-						<td><input type="text" name="checkPwd"
-							class="easyui-validatebox" required="true" /></td>
+						<td>
+							<input type="text" name="checkPwd" class="easyui-validatebox"
+								required="true" />
+						</td>
 						<td>PDA号码</td>
-						<td><input type="text" name="pda" class="easyui-validatebox"
-							required="true" /></td>
+						<td>
+							<input type="text" name="pda" class="easyui-validatebox"
+								required="true" />
+						</td>
 					</tr>
 					<tr>
 						<td>快递员类型</td>
-						<td><input type="text" name="type" class="easyui-validatebox"
-							required="true" /></td>
+						<td>
+							<input type="text" name="type" class="easyui-validatebox"
+								required="true" />
+						</td>
 						<td>取派标准</td>
-						<td><input type="text" name="standard.id"
-							class="easyui-combobox"
-							data-options="required:true,valueField:'id',textField:'name',
+						<td>
+							<input type="text" name="standard.id" class="easyui-combobox"
+								data-options="required:true,valueField:'id',textField:'name',
 											url:'../../standard_findAll.action'" />
 						</td>
 					</tr>
 					<tr>
 						<td>车型</td>
-						<td><input type="text" name="vehicleType"
-							class="easyui-validatebox" required="true" /></td>
+						<td>
+							<input type="text" name="vehicleType" class="easyui-validatebox"
+								required="true" />
+						</td>
 						<td>车牌号</td>
-						<td><input type="text" name="vehicleNum"
-							class="easyui-validatebox" required="true" /></td>
+						<td>
+							<input type="text" name="vehicleNum" class="easyui-validatebox"
+								required="true" />
+						</td>
 					</tr>
 				</table>
 			</form>
@@ -330,24 +370,33 @@
 					</tr>
 					<tr>
 						<td>工号</td>
-						<td><input type="text" name="courierNum" /></td>
+						<td>
+							<input type="text" name="courierNum" />
+						</td>
 					</tr>
 					<tr>
 						<td>收派标准</td>
-						<td><input type="text" name="standard.name" /></td>
+						<td>
+							<input type="text" name="standard.name" />
+						</td>
 					</tr>
 					<tr>
 						<td>所属单位</td>
-						<td><input type="text" name="company" /></td>
+						<td>
+							<input type="text" name="company" />
+						</td>
 					</tr>
 					<tr>
 						<td>类型</td>
-						<td><input type="text" name="type" /></td>
+						<td>
+							<input type="text" name="type" />
+						</td>
 					</tr>
 					<tr>
-						<td colspan="2"><a id="searchBtn" href="#"
-							onclick="doSearch()" class="easyui-linkbutton"
-							data-options="iconCls:'icon-search'">查询</a></td>
+						<td colspan="2">
+							<a id="searchBtn" href="#" onclick="doSearch()"
+								class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
+						</td>
 					</tr>
 				</table>
 			</form>

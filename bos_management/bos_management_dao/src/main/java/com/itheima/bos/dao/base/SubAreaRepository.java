@@ -3,6 +3,7 @@ package com.itheima.bos.dao.base;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import com.itheima.bos.domain.base.FixedArea;
 import com.itheima.bos.domain.base.SubArea;
@@ -13,7 +14,7 @@ import org.springframework.data.jpa.repository.Query;
  * Function: <br/>
  * Date: 2018年3月16日 上午9:40:01 <br/>
  */
-public interface SubAreaRepository extends JpaRepository<SubArea, Long> {
+public interface SubAreaRepository extends JpaRepository<SubArea, Long>, JpaSpecificationExecutor<SubArea>{
 
     // 查询未关联定区的分区
     List<SubArea> findByFixedAreaIsNull();

@@ -1,5 +1,6 @@
 package com.itheima.bos.service.base.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +34,19 @@ public class StandardServiceImpl implements StandardService {
     public Page<Standard> findAll(Pageable pageable) {
 
         return standardRepository.findAll(pageable);
+    }
+
+    @Override
+    public void deleteById(String ids) {
+          
+        if(StringUtils.isNotEmpty(ids)){
+            String[] split = ids.split(",");
+            for (String id : split) {
+//                standardRepository.deleteById(Long.parseLong(id));
+                standardRepository.delete(Long.parseLong(id));
+            }
+        }
+        
     }
 
 }

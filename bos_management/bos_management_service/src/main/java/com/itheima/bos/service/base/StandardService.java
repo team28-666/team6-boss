@@ -16,4 +16,6 @@ public interface StandardService {
 
     Page<Standard> findAll(Pageable pageable);
 
+    void deleteById(String ids);
+
 }

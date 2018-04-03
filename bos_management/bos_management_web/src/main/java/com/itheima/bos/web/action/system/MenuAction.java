@@ -94,4 +94,18 @@ public class MenuAction extends CommonAction<Menu> {
         list2json(list, jsonConfig);
         return NONE;
     }
+    
+    @Action(value = "menuAction_findbyRoleId")
+    public String findbyRoleId() throws IOException {
+        // 获取当前用户
+        
+
+        List<Menu> list = menuService.findbyRoleId(getModel().getId());
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(
+                new String[] {"roles", "childrenMenus", "parentMenu","children"});
+
+        list2json(list, jsonConfig);
+        return NONE;
+    }
 }

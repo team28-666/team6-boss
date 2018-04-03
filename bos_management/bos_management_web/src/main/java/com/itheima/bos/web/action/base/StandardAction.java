@@ -85,5 +85,17 @@ public class StandardAction extends CommonAction<Standard> {
         return NONE;
 
     }
+    
+    private String ids;
+    public void setIds(String ids) {
+        this.ids = ids;
+    }
+    
+    @Action(value = "standardAction_delete",results={@Result(name="success",location="/pages/base/standard.html",type="redirect")})
+    public String delete() throws IOException {
+        standardService.deleteById(ids);
+        return SUCCESS;
+    }
+    
 
 }
