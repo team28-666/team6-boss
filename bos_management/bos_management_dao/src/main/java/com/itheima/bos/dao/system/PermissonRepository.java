@@ -28,8 +28,10 @@ public interface PermissonRepository extends JpaRepository<Permission, Long> {
     @Query("select p from Permission p inner join p.roles r inner join r.users u where u.id = ?")
     List<Permission> findbyUid(Long uid);
 
-    @Query("select p from Permission p inner join p.roles r where r.id=? order by p.keyword")
+    @Query("select p from Permission p inner join p.roles r where r.id=?")
     List<Permission> findbyRoleId(Long id);
 
-    
+    @Query("from Permission p order by p.keyword")
+    List<Permission> findAllOrderByKeyword();
+
 }

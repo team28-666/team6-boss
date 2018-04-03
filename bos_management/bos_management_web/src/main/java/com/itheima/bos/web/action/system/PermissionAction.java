@@ -103,6 +103,22 @@ public class PermissionAction extends CommonAction<Permission> {
         list2json(list, jsonConfig);
         return NONE;
     }
-
     
+    @Action(value = "permissionAction_findAllOrderByKeyword")
+    public String findAllOrderByKeyword() throws IOException {
+
+        List<Permission> list = permissionService.findAllOrderByKeyword();
+        
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.registerJsonBeanProcessor(Permission.class, new JsonBeanProcessor() {
+            @Override
+            public JSONObject processBean(Object arg0, JsonConfig arg1) {
+                Permission permission = (Permission) arg0;
+                return new JSONObject().element("id", permission.getId()).element("name",
+                        permission.getName());
+            }
+        });
+        list2json(list, jsonConfig);
+        return NONE;
+    }
 }

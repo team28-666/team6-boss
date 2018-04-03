@@ -43,5 +43,11 @@ public class PermissionServiceImpl implements PermissionService {
         return permissonRepository.findbyRoleId(id);
     }
 
+    @Override
+    public List<Permission> findAllOrderByKeyword() {
+          
+        return permissonRepository.findAllOrderByKeyword();
+    }
+
     
 }
