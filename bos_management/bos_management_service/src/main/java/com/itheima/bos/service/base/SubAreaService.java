@@ -1,11 +1,11 @@
 package com.itheima.bos.service.base;
 
-import java.util.List;
-
+import com.itheima.bos.domain.base.SubArea;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.itheima.bos.domain.base.SubArea;
+import java.util.ArrayList;
+import java.util.List;
 
 /**  
  * ClassName:SubAreaService <br/>  
@@ -25,5 +25,7 @@ public interface SubAreaService {
     List<Object[]> getChartData();
 
     Page<SubArea> findAssociatedSubAreasByPage(Long id, Pageable pageable);
+
+    void save(ArrayList<SubArea> list);
 }
   
