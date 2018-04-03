@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.itheima.bos.dao.base.CourierRepository;
 import com.itheima.bos.domain.base.Courier;
+import com.itheima.bos.domain.base.FixedArea;
 import com.itheima.bos.service.base.CourierService;
 
 /**
@@ -70,4 +71,8 @@ public class CourierServiceImpl implements CourierService {
 
         return courierRepository.findByDeltagIsNull();
     }
+
+    
+    
+    
 }
