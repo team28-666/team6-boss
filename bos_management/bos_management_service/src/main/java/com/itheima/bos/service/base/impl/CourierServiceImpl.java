@@ -70,4 +70,14 @@ public class CourierServiceImpl implements CourierService {
 
         return courierRepository.findByDeltagIsNull();
     }
+
+	@Override
+	public void restore(String ids) {
+		String[] split = ids.split(",");
+		for (String id : split) {
+			Courier courier = courierRepository.findOne(Long.parseLong(id));
+			courier.setDeltag(null);
+			courierRepository.save(courier);
+		}
+	}
 }
