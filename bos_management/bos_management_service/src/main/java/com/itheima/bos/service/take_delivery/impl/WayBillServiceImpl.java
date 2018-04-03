@@ -33,10 +33,12 @@ public class WayBillServiceImpl implements WayBillService {
 	@Override
 	public void save(List<WayBill> list) {
 		waybillRepository.save(list);
+		
 	}
 
 	@Override
 	public Page<WayBill> findAll(Pageable pageable) {
 		return waybillRepository.findAll(pageable);
+		
 	}
 }

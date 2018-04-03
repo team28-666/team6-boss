@@ -18,7 +18,8 @@ public interface WayBillService {
 
 	void save(List<WayBill> list);
 
-	Page<WayBill> findAll(Pageable pageable);
+	Page<WayBill> findAll(Pageable pageable);    
+	
 
 }
   

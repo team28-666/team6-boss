@@ -10,6 +10,5 @@ import com.itheima.bos.domain.take_delivery.WayBill;
  * Date:     2018年3月25日 上午11:13:24 <br/>       
  */
 public interface WaybillRepository extends JpaRepository<WayBill, Long>{
-
 }
   
