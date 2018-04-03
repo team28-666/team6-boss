@@ -31,14 +31,20 @@
 				if(myurl != null && myurl.toString().length > 1) {
 					var id = GetQueryString("id");
 					
-					$.post("../../permissionAction_findAll.action", function(data) {
-						$(data).each(function(i, n) {
-							$("#permissonTd")
-								.append(
-									'<input id="' + n.id + '" type="checkbox" name="permissionIds" value="' + n.id + '" /><label for="' + n.id + '">' +
-									n.name + '</label>')
-						})
-					}, "json")
+					
+					$.ajax({
+						async:false,
+						url:"../../permissionAction_findAll.action",
+						success:function(data){
+							$(data).each(function(i, n) {
+								$("#permissonTd")
+									.append(
+										'<input id="' + n.id + '" type="checkbox" name="permissionIds" value="' + n.id + '" /><label for="' + n.id + '">' +
+										n.name + '</label>')
+							})
+						},
+						dataType:"json"
+					})
 
 					$.post("../../permissionAction_findAssociatedRole.action",{"id":id},function(data) {
 						$(data).each(function(i, n) {
