@@ -7,6 +7,9 @@ import javax.jms.MessageListener;
 
 import org.springframework.stereotype.Component;
 
+import com.aliyuncs.exceptions.ClientException;
+import com.itheima.utils.SmsUtils;
+
 /**
  * ClassName:SmsConsumer <br/>
  * Function: <br/>
@@ -24,7 +27,11 @@ public class SMSConsumer implements MessageListener {
 
             System.out.println(tel + "====" + code);
 
-            // SmsUtils.sendSms(tel, code);
+            try {
+				SmsUtils.sendSms(tel, code);
+			} catch (ClientException e) {
+				e.printStackTrace();
+			}
 
         } catch (JMSException e) {
             e.printStackTrace();
