@@ -116,14 +116,14 @@
 				      enctype: 'multipart/form-data', // 编码格式
 				     autoSubmit: true, // 选中文件提交表单
 				     
-			/* 	     onComplete: function(response) {
+				     onComplete: function(response) {
 				        	if(response=="success"){
 				        		$.messager.alert("提示信息","数据导入成功！","info");
 				        		$("#grid").datagrid("reload");
 				        	}else{
-				        		$.messager.alert("错误提示",response,"error");
+				        		$.messager.alert("错误提示","数据导入失败","error");
 				        	}
-				     } */// 请求完成时 调用函数 
+				     } // 请求完成时 调用函数
 				});
 			});
 		</script>

@@ -73,8 +73,7 @@ public class AreaAction extends CommonAction<Area> {
         this.file = file;
     }
 
-    @Action(value = "areaAction_importXLS", results = {
-            @Result(name = "success", location = "/pages/base/area.html", type = "redirect")})
+    @Action(value = "areaAction_importXLS")
     public String importXLS() {
 
         try {
@@ -118,6 +117,11 @@ public class AreaAction extends CommonAction<Area> {
 
             // 释放资源
             hssfWorkbook.close();
+
+            HttpServletResponse response = ServletActionContext.getResponse();
+            response.setContentType("text/html;charset=utf-8");
+            response.getWriter().write("success");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
