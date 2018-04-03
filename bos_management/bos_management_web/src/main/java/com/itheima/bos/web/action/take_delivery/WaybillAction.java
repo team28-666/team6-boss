@@ -90,7 +90,7 @@ public class WaybillAction extends CommonAction<WayBill> {
      public void setFile(File file) {
          this.file = file;
      }
-     @Action(value = "waybill_batchImport", results = {@Result(name = "success" , location = "pages/take_delivery/waybill_import.html" , type = "redirect")})
+     @Action(value = "waybill_batchImport")
      public String batchImport() {
      	try {
      		System.out.println(file==null);
@@ -156,13 +156,17 @@ public class WaybillAction extends CommonAction<WayBill> {
  			wayBillService.save(list);
  			
  			hssfWorkbook.close();
- 			
- 		} catch (Exception e) {
+
+            HttpServletResponse response = ServletActionContext.getResponse();
+            response.setContentType("text/html;charset=utf-8");
+            response.getWriter().write("success");
+
+        } catch (Exception e) {
  			  
  			e.printStackTrace();  
  			
  		}
      	
-     	return SUCCESS;
+     	return NONE;
      }
 }

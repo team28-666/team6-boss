@@ -211,10 +211,7 @@ public class SubAreaAction extends CommonAction<SubArea> {
         this.file = file;
     }
 
-    @Action(value = "subAreaAction_importXLS"/*,
-            results = {@Result(name = "success",
-                    location = "/pages/base/sub_area.html",
-                    type = "redirect")}*/)
+    @Action(value = "subAreaAction_importXLS")
     public String importXLS(){
 
         ArrayList<SubArea> list = new ArrayList<>();
@@ -261,6 +258,9 @@ public class SubAreaAction extends CommonAction<SubArea> {
             }
             subAreaService.save(list);
             workbook.close();
+            HttpServletResponse response = ServletActionContext.getResponse();
+            response.setContentType("text/html;charset=utf-8");
+            response.getWriter().write("success");
 
         } catch (IOException e) {
             e.printStackTrace();
