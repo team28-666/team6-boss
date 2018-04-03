@@ -30,7 +30,7 @@ public class RedisTest {
     @Test
     public void test() {
 
-        Pageable pageable = new PageRequest(0, 4);
+        Pageable pageable = new PageRequest(0, 4); 
 
         WebClient.create(
                 "http://localhost:8080/bos_management_web/webService/promotionService/findAll")

@@ -114,7 +114,7 @@ public class WaybillAction extends CommonAction<WayBill> {
                  if (row.getCell(0)!=null) {
  					row.getCell(0).setCellType(Cell.CELL_TYPE_STRING);
  					id = row.getCell(0).getStringCellValue();
- 					
+ 					  
                  }
                  
                  String goodsType = row.getCell(1).getStringCellValue();

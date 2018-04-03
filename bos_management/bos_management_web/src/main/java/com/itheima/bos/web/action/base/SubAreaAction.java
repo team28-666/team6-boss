@@ -2,15 +2,15 @@ package com.itheima.bos.web.action.base;
 
 import com.itheima.bos.domain.base.Area;
 import com.itheima.bos.domain.base.SubArea;
+import com.itheima.bos.service.base.AreaService;
 import com.itheima.bos.service.base.SubAreaService;
 import com.itheima.bos.web.action.CommonAction;
 import com.itheima.utils.FileDownloadUtils;
-
 import net.sf.json.JsonConfig;
-
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -21,20 +21,17 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ClassName:SubAreaAction <br/>
@@ -110,6 +107,7 @@ public class SubAreaAction extends CommonAction<SubArea> {
         
         Page<SubArea> page =
                 subAreaService.findAssociatedSubAreasByPage(getModel().getId(),pageable);
+        System.out.println(page.getContent());
         JsonConfig jsonConfig = new JsonConfig();
         jsonConfig.setExcludes(new String[] {"subareas","couriers"});
         page2json(page, jsonConfig);
@@ -201,6 +199,74 @@ public class SubAreaAction extends CommonAction<SubArea> {
         return NONE;
         
         
+    }
+
+    //导入Excel数据功能
+    @Autowired
+    private AreaService areaService;
+
+    private File file;
+
+    public void setFile(File file) {
+        this.file = file;
+    }
+
+    @Action(value = "subAreaAction_importXLS"/*,
+            results = {@Result(name = "success",
+                    location = "/pages/base/sub_area.html",
+                    type = "redirect")}*/)
+    public String importXLS(){
+
+        ArrayList<SubArea> list = new ArrayList<>();
+        try {
+
+            HSSFWorkbook workbook = new HSSFWorkbook(new FileInputStream(file));
+
+            HSSFSheet sheetAt = workbook.getSheetAt(0);
+
+            for (Row row : sheetAt) {
+                if (row.getRowNum() == 0) {
+                    continue;
+                }
+                if (row.getCell(0)!=null){
+                    SubArea subArea = new SubArea();
+                    //读取表格数据
+                    if (row.getCell(1)!=null && row.getCell(2)!=null && row.getCell(3)!=null) {
+
+                        String province = row.getCell(1).getStringCellValue();
+                        String city = row.getCell(2).getStringCellValue();
+                        String district = row.getCell(3).getStringCellValue();
+                        //截取到省市区的最后一个字符
+                        province = province.substring(0, province.length() - 1);
+                        city = city.substring(0, city.length() - 1);
+                        district = district.substring(0, district.length() - 1);
+                        Area area = areaService.findByProvinceAndCityAndDistrict(province, city, district);
+                        subArea.setArea(area);
+                    }
+                    if (row.getCell(4)!=null && row.getCell(5)!=null && row.getCell(6)!=null && row.getCell(7)!=null &&row.getCell(7)!=null){
+                        String keyWords = row.getCell(4).getStringCellValue();
+                        String startNum = row.getCell(5).getStringCellValue();
+                        String endNum = row.getCell(6).getStringCellValue();
+                        Character single = Character.valueOf(row.getCell(7).getStringCellValue().charAt(0));
+                        String assistKeyWords = row.getCell(8).getStringCellValue();
+
+                        subArea.setKeyWords(keyWords);
+                        subArea.setStartNum(startNum);
+                        subArea.setEndNum(endNum);
+                        subArea.setSingle(single);
+                        subArea.setAssistKeyWords(assistKeyWords);
+                    }
+                    list.add(subArea);
+                }
+            }
+            subAreaService.save(list);
+            workbook.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+        return NONE;
     }
     
     

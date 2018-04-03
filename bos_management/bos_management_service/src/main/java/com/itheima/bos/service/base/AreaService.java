@@ -22,5 +22,6 @@ public interface AreaService {
 
     List<Object[]> exportCharts();
 
+    Area findByProvinceAndCityAndDistrict(String province, String city, String district);
 }
   

@@ -26,7 +26,6 @@ import org.springframework.stereotype.Controller;
 
 import com.aliyuncs.exceptions.ClientException;
 import com.itheima.crm.domain.Customer;
-import com.itheima.utils.MailUtils;
 import com.itheima.utils.SmsUtils;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
@@ -113,13 +112,22 @@ public class CustomerAction extends ActionSupport
             // 存储验证码
             redisTemplate.opsForValue().set(model.getTelephone(), activeCode, 1,
                     TimeUnit.DAYS);
-            String emailBody =
+           final  String emailBody =
                     "感谢您注册本网站的帐号，请在24小时之内点击<a href='http://localhost:8280/portal/customerAction_active.action?activeCode="
                             + activeCode + "&telephone=" + model.getTelephone()
                             + "'>本链接</a>激活您的帐号";
             // 发送激活邮件
-            MailUtils.sendMail(model.getEmail(), "激活邮件", emailBody);
-
+            //MailUtils.sendMail(model.getEmail(), "激活邮件", emailBody);
+            jmsTemplate.send("email",new MessageCreator() {
+				@Override
+				public Message createMessage(Session session) throws JMSException {
+					System.out.println("進入發送郵箱send方法");
+	                MapMessage mess = session.createMapMessage();
+	                mess.setString("email", model.getEmail());
+	                mess.setString("emailBody", emailBody);
+	                return mess;
+				}
+			});
             return SUCCESS;
         }
         return ERROR;
@@ -217,6 +225,33 @@ public class CustomerAction extends ActionSupport
 
         return ERROR;
 
+    }
+    //异步校验手机号
+    @Action(value = "customerAction_checkTelephone")
+    public String checkTelephone() throws IOException {
+        if (StringUtils.isNotEmpty(model.getTelephone())){
+
+            Customer customer = WebClient.create("http://localhost:8180/crm/webService/customerService/checkCustomer")
+                    .type(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .query("telephone", model.getTelephone())
+                    .get(Customer.class);
+            if (customer == null ){
+                ServletActionContext.getResponse().getWriter().write("1");
+                return NONE;
+            }
+        }
+        return NONE;
+    }
+
+    //异步校验验证码
+    @Action(value = "customerAction_checkValidateCode")
+    public String checkValidateCode() throws IOException {
+        String validateCode = (String) ServletActionContext.getRequest().getSession().getAttribute("validateCode");
+        if (checkcode != null && checkcode.equals(validateCode)){
+            ServletActionContext.getResponse().getWriter().write("1");
+        }
+        return NONE;
     }
 
 }

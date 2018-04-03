@@ -49,4 +49,9 @@ public class AreaServiceImpl implements AreaService {
         return areaRepository.exportCharts();
     }
 
+    @Override
+    public Area findByProvinceAndCityAndDistrict(String province, String city, String district) {
+        return areaRepository.findByProvinceAndCityAndDistrict(province, city, district);
+    }
+
 }

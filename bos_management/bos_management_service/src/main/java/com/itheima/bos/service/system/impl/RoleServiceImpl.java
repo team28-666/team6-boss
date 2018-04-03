@@ -39,8 +39,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void save(Role role, String menuIds, Long[] permissionIds) {
-        roleRepository.save(role);
-
         if (StringUtils.isNotEmpty(menuIds)) {
             String[] split = menuIds.split(",");
             for (String menuId : split) {
@@ -58,6 +56,7 @@ public class RoleServiceImpl implements RoleService {
 
             }
         }
+        roleRepository.save(role);
 
     }
 

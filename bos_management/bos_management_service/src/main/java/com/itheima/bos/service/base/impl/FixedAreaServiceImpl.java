@@ -1,5 +1,7 @@
 package com.itheima.bos.service.base.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,5 +92,30 @@ public class FixedAreaServiceImpl implements FixedAreaService {
             subArea.setFixedArea(fixedArea);
         }
     }
+
+    
+ // 查找已关联了定区的快递员
+    @Override
+    public List<Courier> findAssociatedCourier(Long id) {
+          
+        FixedArea fixedArea = fixedAreaRepository.findOne(id);
+        
+        Set<Courier> couriers = fixedArea.getCouriers();
+       
+        List<Courier> list = new ArrayList<>();
+        if(couriers.size()>0) {
+            
+            for (Courier courier : couriers) {
+                list.add(courier);
+            }
+            
+        }
+        
+        return list;
+    }
+
+    
+
+   
 
 }

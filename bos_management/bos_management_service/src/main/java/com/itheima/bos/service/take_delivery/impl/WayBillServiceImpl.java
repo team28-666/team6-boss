@@ -21,7 +21,7 @@ import com.itheima.bos.service.take_delivery.WayBillService;
 @Transactional
 public class WayBillServiceImpl implements WayBillService {
 
-    @Autowired
+    @Autowired   
     private WaybillRepository waybillRepository;
 
     @Override

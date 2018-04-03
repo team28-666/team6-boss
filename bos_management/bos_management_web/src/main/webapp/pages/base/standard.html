@@ -51,6 +51,8 @@
 		text : '增加',
 		iconCls : 'icon-add',
 		handler : function() {
+			//每次按增加之前把表单清空
+			$("#standardForm").form("clear")
 			$("#standardWindow").window("open")
 		}
 	}, {

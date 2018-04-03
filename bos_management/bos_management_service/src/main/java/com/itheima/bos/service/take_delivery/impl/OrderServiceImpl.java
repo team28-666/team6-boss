@@ -5,11 +5,17 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.jms.JMSException;
+import javax.jms.MapMessage;
+import javax.jms.Message;
+import javax.jms.Session;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,9 +52,11 @@ public class OrderServiceImpl implements OrderService {
     private FixedAreaRepository fixedAreaRepository;
     @Autowired
     private WorkbillRepository workbillRepository;
+    @Autowired
+    private JmsTemplate jmsTemplate;
 
     @Override
-    public void saveOrder(Order order) {
+    public void saveOrder(final Order order) {
         // 把瞬时态的Area转换为持久态的Area
         Area sendArea = order.getSendArea();
         if (sendArea != null) {
@@ -96,7 +104,7 @@ public class OrderServiceImpl implements OrderService {
                     if (!couriers.isEmpty()) {
                         // 根据快递员的上班时间/收派能力/忙闲程度
                         Iterator<Courier> iterator = couriers.iterator();
-                        Courier courier = iterator.next();
+                        final Courier courier = iterator.next();
                         // 指派快递员
                         order.setCourier(courier);
                         // 生成工单
@@ -114,6 +122,20 @@ public class OrderServiceImpl implements OrderService {
                         // 发送短信,推送一个通知
                         // 中断代码的执行
                         order.setOrderType("自动分单");
+                      //通知对应的快递员取件,使用mq异步
+                        jmsTemplate.send("smsCourier", new MessageCreator() {
+
+                            @Override
+                            public Message createMessage(Session session) throws JMSException {
+                                  
+                                MapMessage mapMessage = session.createMapMessage();
+                                mapMessage.setString("tel", courier.getTelephone());
+                                mapMessage.setString("name", courier.getName());
+                                mapMessage.setString("address", order.getSendAddress());
+                                mapMessage.setString("customer", order.getSendName());
+                                return mapMessage;
+                            }
+                        });
                         return;
                     }
                 }
@@ -137,7 +159,7 @@ public class OrderServiceImpl implements OrderService {
                                 if (!couriers.isEmpty()) {
                                     Iterator<Courier> iterator =
                                             couriers.iterator();
-                                    Courier courier = iterator.next();
+                                    final Courier courier = iterator.next();
                                     // 指派快递员
                                     order.setCourier(courier);
                                     // 生成工单
@@ -155,6 +177,21 @@ public class OrderServiceImpl implements OrderService {
                                     // 发送短信,推送一个通知
                                     // 中断代码的执行
                                     order.setOrderType("自动分单");
+                                  //通知对应的快递员取件,使用mq异步
+                                    System.out.println("-----------------------------");
+                                    jmsTemplate.send("smsCourier", new MessageCreator() {
+
+                                        @Override
+                                        public Message createMessage(Session session) throws JMSException {
+                                              
+                                            MapMessage mapMessage = session.createMapMessage();
+                                            mapMessage.setString("tel", courier.getTelephone());
+                                            mapMessage.setString("name", courier.getName());
+                                            mapMessage.setString("address", order.getSendAddress());
+                                            mapMessage.setString("customer", order.getSendName());
+                                            return mapMessage;
+                                        }
+                                    });
                                     return;
                                 }
                             }
