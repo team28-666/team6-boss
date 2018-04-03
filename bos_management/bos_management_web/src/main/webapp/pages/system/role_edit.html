@@ -50,6 +50,7 @@
 					$.post("../../roleAction_findById.action",{"id":id},function(data) {
 									$(data).each(function(i, n) {
 										
+										$("#id").val(n.id);
 										$("#name").val(n.name);
 										$("#keyword").val(n.keyword);
 										$("#description").html(n.description);
@@ -140,7 +141,7 @@
 							// 提交表单
 							$("#roleEditForm").submit();
 							
-							window.location.reload(); 
+							
 						}
 					});
 					
@@ -156,7 +157,7 @@
 			</div>
 		</div>
 		<div region="center" style="overflow: auto; padding: 5px;" border="false">
-			<form id="roleForm" method="post" action="../../roleAction_save.action">
+			<form id="roleEditForm" method="post" action="../../roleAction_save.action">
 
 				<input type="hidden" id="menuIds" name="menuIds" />
 				<table class="table-edit" width="80%" align="center">
@@ -166,6 +167,7 @@
 					<tr>
 						<td>名称</td>
 						<td>
+						<input id="id" type="hidden" name="id" class="easyui-validatebox" data-options="required:true" />
 							<input id="name" type="text" name="name" class="easyui-validatebox" data-options="required:true" />
 						</td>
 					</tr>
