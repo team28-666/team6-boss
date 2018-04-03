@@ -364,8 +364,10 @@
 			border : true,
 			rownumbers : true,
 			striped : true,
-			url : "../../fixedAreaAction_findAssociatedCourier.action?id="+id,
-			
+			//url : "../../fixedAreaAction_findAssociatedCourier.action?id="+id,
+			url : "../../courierAction_findAssociatedCourier.action?id="+id,
+			pageList : [ 1, 50, 100 ],
+			pagination : true,
 					
 					
 				columns : [ [ {

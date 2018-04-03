@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletResponse;
@@ -65,8 +66,38 @@ public class CourierAction extends CommonAction<Courier> {
         courierService.save(getModel());
         return SUCCESS;
     }
+    //方法2 查看关联了定区的快递员
+    @Action("courierAction_findAssociatedCourier")
+    public String findAssociatedCourier() throws IOException {
+        
+        Specification<Courier> specification = new Specification<Courier>() {
 
-    
+            @Override
+            public Predicate toPredicate(Root<Courier> root, CriteriaQuery<?> query,
+                    CriteriaBuilder cb) {
+                  
+                Join<Courier, FixedArea> Join = root.join("fixedAreas", JoinType.LEFT);
+                
+                Predicate predicate = cb.equal(Join.get("id"), getModel().getId());
+                return predicate;
+                
+             
+            }
+            
+        };
+        
+        Pageable pageable = new PageRequest(page - 1, rows);
+
+        Page<Courier> page = courierService.findAll(specification, pageable);
+
+        // 灵活控制输出的内容
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[] {"fixedAreas", "takeTime"});
+
+        page2json(page, jsonConfig);
+        return NONE;
+        
+    }
     
     @Action("courierAction_pageQuery")
     public String pageQuery() throws IOException {
