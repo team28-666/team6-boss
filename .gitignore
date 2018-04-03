@@ -3,5 +3,7 @@
 .classpath
 target
 .tern-project
-mylog.log
 applicationContext.xml
+
+mylog.log
+

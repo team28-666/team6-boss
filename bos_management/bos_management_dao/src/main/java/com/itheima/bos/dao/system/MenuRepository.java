@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.itheima.bos.domain.system.Menu;
 
+import groovy.time.BaseDuration.From;
+
 /**
  * ClassName:MenuRepository <br/>
  * Function: <br/>
@@ -17,4 +19,8 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
 
     @Query("select m from Menu m inner join m.roles r inner join r.users u where u.id = ?")
     List<Menu> findbyUser(Long id);
+
+    @Query("select m from Menu m inner join m.roles r  where r.id = ?")
+    List<Menu> findbyRoleId(Long id);
+
 }

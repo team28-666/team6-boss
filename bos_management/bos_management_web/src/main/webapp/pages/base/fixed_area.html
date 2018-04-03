@@ -56,7 +56,8 @@
 							var keyWords = data[i].keyWords;
 
 							$("#noassociationSubAreaSelect").append(
-									"<option value='"+id+"'>" + keyWords+ "</option>")
+									"<option value='"+id+"'>" + keyWords
+											+ "</option>")
 						}
 
 					});
@@ -64,17 +65,16 @@
 			// 获取定区的ID
 			var id = rows[0].id;
 			//发起请求查询已关联到当前定区的分区
-			$.post("../../subAreaAction_findAssociatedSubAreas.action",
-					"id=" + id, function(data) {
-						for (var i = 0; i < data.length; i++) {
-							var id = data[i].id;
-							var keyWords = data[i].keyWords;
-						
+			$.post("../../subAreaAction_findAssociatedSubAreas.action", "id="
+					+ id, function(data) {
+				for (var i = 0; i < data.length; i++) {
+					var id = data[i].id;
+					var keyWords = data[i].keyWords;
 
-							$("#associationSubAreaSelect").append(
-									"<option value='"+id+"'>" + keyWords + "</option>")
-						}
-					})
+					$("#associationSubAreaSelect").append(
+							"<option value='"+id+"'>" + keyWords + "</option>")
+				}
+			})
 		} else {
 			$.messager.alert("提示", "您最多也只能选择一条数据进行操作", "warning")
 		}
@@ -214,7 +214,7 @@
 			border : true,
 			rownumbers : true,
 			striped : true,
-			pageList : [ 30, 50, 100 ],
+			pageList : [ 5, 10, 15, 20 ],
 			pagination : true,
 			toolbar : toolbar,
 			url : "../../fixedAreaAction_pageQuery.action",
@@ -247,17 +247,26 @@
 		$("#btn").click(function() {
 			alert("执行查询...");
 		});
-
+		
+        
 	});
 
-	function doDblClickRow() {
-		alert("双击表格数据...");
+	function doDblClickRow(index, row) {
+		//清空数据
+		$("#association_subarea  tr:not(:first)").empty("");
+
+		//获取单击行的id
+		var id = row.id;
+
 		$('#association_subarea').datagrid({
 			fit : true,
 			border : true,
 			rownumbers : true,
 			striped : true,
-			url : "../../data/association_subarea.json",
+			pagination : true,
+			pageList : [ 5, 10, 15, 20 ],
+			pageSize: 5,
+			url : "../../subAreaAction_findAssociatedSubAreasByPage.action?id=" + id,
 			columns : [ [ {
 				field : 'id',
 				title : '分拣编号',
@@ -297,17 +306,17 @@
 					return "";
 				}
 			}, {
-				field : 'addresskey',
+				field : 'keyWords',
 				title : '关键字',
 				width : 120,
 				align : 'center'
 			}, {
-				field : 'startnum',
+				field : 'startNum',
 				title : '起始号',
 				width : 100,
 				align : 'center'
 			}, {
-				field : 'endnum',
+				field : 'endNum',
 				title : '终止号',
 				width : 100,
 				align : 'center'
@@ -317,25 +326,27 @@
 				width : 100,
 				align : 'center'
 			}, {
-				field : 'position',
+				field : 'keyWords',
 				title : '位置',
 				width : 200,
 				align : 'center'
 			} ] ]
 		});
+
+		//查询定区关联的客户
 		$('#association_customer').datagrid({
 			fit : true,
 			border : true,
 			rownumbers : true,
 			striped : true,
-			url : "../../data/association_customer.json",
+			url : "../../fixedAreaAction_findAssociatedCustomers.action?id="+id,
 			columns : [ [ {
 				field : 'id',
 				title : '客户编号',
 				width : 120,
 				align : 'center'
 			}, {
-				field : 'name',
+				field : 'username',
 				title : '客户名称',
 				width : 120,
 				align : 'center'
@@ -363,7 +374,7 @@
 	<div region="center" border="false">
 		<table id="grid"></table>
 	</div>
-	<div region="south" border="false" style="height: 150px">
+	<div region="south" border="false" style="height: 250px" split="true">
 		<div id="tabs" fit="true" class="easyui-tabs">
 			<div title="关联分区" id="subArea"
 				style="width: 100%; height: 100%; overflow: hidden">
@@ -399,23 +410,31 @@
 
 					<tr>
 						<td>定区名称</td>
-						<td><input type="text" name="fixedAreaName"
-							class="easyui-validatebox" required="true" /></td>
+						<td>
+							<input type="text" name="fixedAreaName"
+								class="easyui-validatebox" required="true" />
+						</td>
 					</tr>
 					<tr>
 						<td>负责人</td>
-						<td><input type="text" name="fixedAreaLeader"
-							class="easyui-validatebox" required="true" /></td>
+						<td>
+							<input type="text" name="fixedAreaLeader"
+								class="easyui-validatebox" required="true" />
+						</td>
 					</tr>
 					<tr>
 						<td>联系电话</td>
-						<td><input type="text" name="telephone"
-							class="easyui-validatebox" required="true" /></td>
+						<td>
+							<input type="text" name="telephone" class="easyui-validatebox"
+								required="true" />
+						</td>
 					</tr>
 					<tr>
 						<td>所属公司</td>
-						<td><input type="text" name="company"
-							class="easyui-validatebox" required="true" /></td>
+						<td>
+							<input type="text" name="company" class="easyui-validatebox"
+								required="true" />
+						</td>
 					</tr>
 				</table>
 			</form>
@@ -433,22 +452,29 @@
 					</tr>
 					<tr>
 						<td>定区编码</td>
-						<td><input type="text" name="id" class="easyui-validatebox"
-							required="true" /></td>
+						<td>
+							<input type="text" name="id" class="easyui-validatebox"
+								required="true" />
+						</td>
 					</tr>
 					<tr>
 						<td>所属单位</td>
-						<td><input type="text" name="courier.company"
-							class="easyui-validatebox" required="true" /></td>
+						<td>
+							<input type="text" name="courier.company"
+								class="easyui-validatebox" required="true" />
+						</td>
 					</tr>
 					<tr>
 						<td>分区</td>
-						<td><input type="text" name="subareaName"
-							class="easyui-validatebox" required="true" /></td>
+						<td>
+							<input type="text" name="subareaName" class="easyui-validatebox"
+								required="true" />
+						</td>
 					</tr>
 					<tr>
-						<td colspan="2"><a id="btn" href="#"
-							class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
+						<td colspan="2">
+							<a id="btn" href="#" class="easyui-linkbutton"
+								data-options="iconCls:'icon-search'">查询</a>
 						</td>
 					</tr>
 				</table>
@@ -470,23 +496,33 @@
 						<td colspan="3">关联客户</td>
 					</tr>
 					<tr>
-						<td><input type="hidden" name="id" id="customerFixedAreaId" />
-							<!-- size: 指定一次可以显示多少条数据  --> <!-- multiple: 可以选择多条数据--> <select
-							id="noassociationSelect" multiple="multiple" size="10">
+						<td>
+							<input type="hidden" name="id" id="customerFixedAreaId" />
+							<!-- size: 指定一次可以显示多少条数据  -->
+							<!-- multiple: 可以选择多条数据-->
+							<select id="noassociationSelect" multiple="multiple" size="10">
 
 
-						</select></td>
-						<td><input type="button" value="》》" id="toRight"
-							onclick="moveCustomer2Right()"> <br /> <input
-							type="button" value="《《" id="toLeft"
-							onclick="moveCustomer2Left()"></td>
-						<td><select id="associationSelect" name="customerIds"
-							multiple="multiple" size="10"></select></td>
+							</select>
+						</td>
+						<td>
+							<input type="button" value="》》" id="toRight"
+								onclick="moveCustomer2Right()">
+							<br />
+							<input type="button" value="《《" id="toLeft"
+								onclick="moveCustomer2Left()">
+						</td>
+						<td>
+							<select id="associationSelect" name="customerIds"
+								multiple="multiple" size="10"></select>
+						</td>
 					</tr>
 					<tr>
-						<td colspan="3"><a id="associationBtn" href="#"
-							onclick="associateCustomer2FixedArea()" class="easyui-linkbutton"
-							data-options="iconCls:'icon-save'">关联客户</a></td>
+						<td colspan="3">
+							<a id="associationBtn" href="#"
+								onclick="associateCustomer2FixedArea()"
+								class="easyui-linkbutton" data-options="iconCls:'icon-save'">关联客户</a>
+						</td>
 					</tr>
 				</table>
 			</form>
@@ -532,22 +568,34 @@
 						<td colspan="3">关联分区</td>
 					</tr>
 					<tr>
-						<td><input type="hidden" name="id" id="subAreaFixedAreaId" />
-							<!-- size: 指定一次可以显示多少条数据  --> <!-- multiple: 可以选择多条数据--> <select
-							id="noassociationSubAreaSelect" multiple="multiple" size="10">
+						<td>
+							<input type="hidden" name="id" id="subAreaFixedAreaId" />
+							<!-- size: 指定一次可以显示多少条数据  -->
+							<!-- multiple: 可以选择多条数据-->
+							<select id="noassociationSubAreaSelect" multiple="multiple"
+								size="10">
 
 
-						</select></td>
-						<td><input type="button" value="》》" id="toRight"
-							onclick="moveSubArea2Right()"> <br /> <input
-							type="button" value="《《" id="toLeft" onclick="moveSubArea2Left()"></td>
-						<td><select id="associationSubAreaSelect" name="subAreaIds"
-							multiple="multiple" size="10"></select></td>
+							</select>
+						</td>
+						<td>
+							<input type="button" value="》》" id="toRight"
+								onclick="moveSubArea2Right()">
+							<br />
+							<input type="button" value="《《" id="toLeft"
+								onclick="moveSubArea2Left()">
+						</td>
+						<td>
+							<select id="associationSubAreaSelect" name="subAreaIds"
+								multiple="multiple" size="10"></select>
+						</td>
 					</tr>
 					<tr>
-						<td colspan="3"><a id="associationBtn" href="#"
-							onclick="associateSubArea2FixedArea()" class="easyui-linkbutton"
-							data-options="iconCls:'icon-save'">关联分区</a></td>
+						<td colspan="3">
+							<a id="associationBtn" href="#"
+								onclick="associateSubArea2FixedArea()" class="easyui-linkbutton"
+								data-options="iconCls:'icon-save'">关联分区</a>
+						</td>
 					</tr>
 				</table>
 			</form>
@@ -594,24 +642,29 @@
 					<tr>
 						<td>选择快递员</td>
 						<td>
-							<!-- 存放定区编号 --> <input type="hidden" name="id"
-							id="courierFixedAreaId" /> <input
-							data-options="ditable:false, url:'../../courierAction_listajax.action',valueField:'id',textField:'name'"
-							type="text" name="courierId" class="easyui-combobox"
-							required="true" />
+							<!-- 存放定区编号 -->
+							<input type="hidden" name="id" id="courierFixedAreaId" />
+							<input
+								data-options="ditable:false, url:'../../courierAction_listajax.action',valueField:'id',textField:'name'"
+								type="text" name="courierId" class="easyui-combobox"
+								required="true" />
 						</td>
 					</tr>
 					<tr>
 						<td>选择收派时间</td>
-						<td><input
-							data-options="ditable:false, url:'../../takeTimeAction_listajax.action',valueField:'id',textField:'name'"
-							type="text" name="takeTimeId" class="easyui-combobox"
-							required="true" /></td>
+						<td>
+							<input
+								data-options="ditable:false, url:'../../takeTimeAction_listajax.action',valueField:'id',textField:'name'"
+								type="text" name="takeTimeId" class="easyui-combobox"
+								required="true" />
+						</td>
 					</tr>
 					<tr>
-						<td colspan="3"><a id="associationCourierBtn" href="#"
-							onclick="associateCourier()" class="easyui-linkbutton"
-							data-options="iconCls:'icon-save'">关联快递员</a></td>
+						<td colspan="3">
+							<a id="associationCourierBtn" href="#"
+								onclick="associateCourier()" class="easyui-linkbutton"
+								data-options="iconCls:'icon-save'">关联快递员</a>
+						</td>
 					</tr>
 				</table>
 			</form>
