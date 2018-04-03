@@ -152,9 +152,19 @@ public class SubAreaAction extends CommonAction<SubArea> {
 
             HSSFRow dataRow = sheet.createRow(lastRowNum + 1);
             dataRow.createCell(0).setCellValue(subArea.getId());
-            dataRow.createCell(1).setCellValue(subArea.getArea().getProvince());
-            dataRow.createCell(2).setCellValue(subArea.getArea().getCity());
-            dataRow.createCell(3).setCellValue(subArea.getArea().getDistrict());
+            
+            //非空判断
+            if(subArea.getArea()!=null && subArea.getArea().getProvince() != null){
+                dataRow.createCell(1).setCellValue(subArea.getArea().getProvince());
+            }
+            if(subArea.getArea()!=null && subArea.getArea().getProvince() != null){
+                dataRow.createCell(2).setCellValue(subArea.getArea().getCity());
+            }
+            if(subArea.getArea()!=null && subArea.getArea().getProvince() != null){
+                dataRow.createCell(3).setCellValue(subArea.getArea().getDistrict());
+            }
+            
+           
             dataRow.createCell(4).setCellValue(subArea.getKeyWords());
             dataRow.createCell(5).setCellValue(subArea.getStartNum());
             dataRow.createCell(6).setCellValue(subArea.getEndNum());
