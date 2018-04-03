@@ -26,9 +26,13 @@
 	function doAdd() {
 		$('#addWindow').window("open");
 	}
-
 	function doEdit() {
-		alert("修改...");
+		var rows = $("#grid").datagrid("getSelections")
+		if (rows.length == 1) {
+			
+		}else {
+			$.messager.alert("提示", "你只能选择一条数据进行操作", "info")
+		}
 	}
 
 	function doDelete() {
@@ -66,7 +70,8 @@
 		if (rows.length == 0) {
 			$.messager.alert("提示", "你至少要选择一条数据进行操作", "info")
 		} else {
-			$.messager.confirm(
+			$.messager
+					.confirm(
 							'还原对话框',
 							'您确定要还原这些快递员吗？',
 							function(r) {
