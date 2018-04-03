@@ -31,8 +31,8 @@
 		<property name="driverClass"
 			value="oracle.jdbc.driver.OracleDriver" />
 		<property name="jdbcUrl"
-			value="jdbc:oracle:thin:@192.168.204.168:1521:ORCL" />
-		<property name="user" value="lyn" />
+			value="jdbc:oracle:thin:@192.168.6.100:1521:ORCL" />
+		<property name="user" value="zyl" />
 		<property name="password" value="root" />
 	</bean>
 	<!-- spring整合JPA -->

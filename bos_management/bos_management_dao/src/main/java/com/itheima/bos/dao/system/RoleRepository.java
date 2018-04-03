@@ -19,6 +19,8 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
     // 要解决这个错误,我们需要具体指定查询结果,就是增加select r
     @Query("select r from Role r inner join r.users u where u.id = ?")
     List<Role> findbyUid(Long uid);
+
+    List<Role> findById(Long id);
     
     
 }

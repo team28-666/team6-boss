@@ -23,7 +23,7 @@
 
 				// 数据表格属性
 				$("#grid").datagrid({
-					toolbar: [{
+					toolbar: [ {
 						id: 'add',
 						text: '添加角色',
 						iconCls: 'icon-add',
@@ -79,7 +79,7 @@
 								};
 
 								$.post("../../menuAction_findbyRoleId.action", {
-									"id": result[0].id
+									"id": id
 								}, function(data) {
 
 									treeNode = data;
@@ -142,6 +142,18 @@
 							} else {
 								$.messager.alert("提示", "您必须也只能选择一条数据进行修改", "info")
 							}
+						}
+					},{
+						id: 'edit',
+						text: '修改角色页面',
+						iconCls: 'icon-add',
+						handler: function() {
+							var result = $("#grid").datagrid("getSelections")
+							var id =result[0].id;
+							if(result.length == 1) {
+								location.href = 'role_edit.html?id='+id;
+							}
+							
 						}
 					}],
 					url: '../../roleAction_pageQuery.action',

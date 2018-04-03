@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Basic Layout - jQuery EasyUI Demo</title>
+<link rel="stylesheet" type="text/css"
+	href="../js/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="../js/easyui/themes/icon.css">
+
+<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+
+<link rel="stylesheet" href="../js/ztree/zTreeStyle.css" type="text/css">
+
+<script type="text/javascript" src="../js/ztree/jquery.ztree.all-3.5.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$('#dg').datagrid({
+			url : "",
+			striped : true,
+			rownumbers : true,
+			pagination : true,
+			fit : true,
+			pageList : [ 1, 2, 3 ],
+			//保存后回调函数
+			onAfterEdit:function(index,row,changes){
+				console.log(index,row,changes)
+			},
+			columns : [ [ {
+				field : '11',
+				title : '代码',
+				width : 100,
+				checkbox : true
+			}, {
+				field : 'name',
+				title : '代码',
+				width : 100,
+				editor : {
+					type : "text"
+				}
+			}, {
+				field : 'age',
+				title : '名称',
+				width : 100,
+				editor : {
+					type : "text"
+				}
+			}, {
+				field : 'note',
+				title : '价格',
+				width : 100,
+				align : 'right',
+				editor : {
+					type : "text"
+				}
+			} ] ],
+			toolbar : [ {
+				iconCls : 'icon-edit',
+				text : "增加一行",
+				handler : function() {
+					$('#dg').datagrid('insertRow', {
+						index : 0, // 索引从0开始
+						row : {
+							name : '新名称',
+							age : 30,
+							note : '新消息'
+						}
+					});
+					$('#dg').datagrid('beginEdit', 0)
+				}
+			}, '-', {
+				iconCls : 'icon-help',
+				text : "修改",
+				handler : function() {
+					var rows = $('#dg').datagrid("getSelections");
+					if (rows.length == 1) {
+						var index = $('#dg').datagrid("getRowIndex", rows[0]);
+						$('#dg').datagrid('beginEdit', index)
+					}
+
+				}
+			} , '-', {
+				iconCls : 'icon-help',
+				text : "删除",
+				handler : function() {
+					$('#dg').datagrid('deleteRow', 0)
+				}
+			}, '-', {
+				iconCls : 'icon-help',
+				text : "完成编辑",
+				handler : function() {
+					var rows = $('#dg').datagrid("getSelections");
+					if (rows.length == 1) {
+						var index = $('#dg').datagrid("getRowIndex", rows[0]);
+						$('#dg').datagrid('endEdit', index)
+					}else {
+						$('#dg').datagrid('endEdit', 0)
+					}
+					
+				}
+			} ]
+
+		});
+	})
+</script>
+</head>
+<body>
+	<table id="dg">
+
+	</table>
+
+</body>
+</html>

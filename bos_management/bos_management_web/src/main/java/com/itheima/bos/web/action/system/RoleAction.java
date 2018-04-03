@@ -90,6 +90,15 @@ public class RoleAction extends CommonAction<Role> {
     
     
     
-    
+    @Action(value = "roleAction_findById")
+    public String findById() throws IOException {
+
+        List<Role> list=roleService.findById(getModel().getId());
+
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[] {"users", "permissions", "menus"});
+        list2json(list, jsonConfig);
+        return NONE;
+    }
     
 }
