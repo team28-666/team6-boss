@@ -71,4 +71,9 @@ public interface CustomerService {
     @GET
     @Path("/findFixedAreaIdByAdddress")
     String findFixedAreaIdByAdddress(@QueryParam("address") String address);
+
+    //根据手机号查询用户
+    @GET
+    @Path("/checkCustomer")
+    Customer checkCustomer(@QueryParam("telephone") String telephone);
 }

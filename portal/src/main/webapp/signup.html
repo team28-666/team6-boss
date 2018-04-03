@@ -43,10 +43,29 @@
 						<ul>
 							<li class="bl-form-group"><label><em>*</em>手机号：</label>
 								<div class="controls">
+									<!-- 添加提示功能 -->
 									<input type="text" id="telephone" value="" name="telephone"
 										class="fn-tinput" placeholder="手机号" required
-										data-rule-mobile="true" data-msg-required="请输入手机号"
+										data-rule-mobile="true"  data-toggle="popover" data-placement="right" data-content="该手机号已被注册,请更换其他手机号注册!" data-msg-required="请输入手机号"
 										data-msg-mobile="请输入正确格式" />
+									<!-- 手机号异步校验,存在提交按钮失效 -->
+									<script>
+                                        $(function () {
+                                            $("#telephone").change(function () {
+                                                var telephone = $("#telephone").val();
+                                                $.post("customerAction_checkTelephone.action",{"telephone":telephone},function (result) {
+                                                    if (result == "1"){ //可用
+                                                        $('#telephone').popover('hide');
+                                                        $("#checkbtn").removeClass("disabled");
+                                                    }else {
+                                                        $('#telephone').popover('show');
+                                                        $("#checkbtn").addClass("disabled");
+                                                    }
+                                                });
+                                            });
+                                        });
+									</script>
+
 								</div></li>
 							<li class="bl-form-group"><label><em>*</em>验证码：</label>
 								<div class="controls">
@@ -59,8 +78,7 @@
 										var btn;
 										function sendCode(thisBtn) {
 											// 校验手机号
-											var telephone = $("#telephone")
-													.val();
+											var telephone = $("#telephone").val();
 											// 1[3456789]\d{9}
 											var reg = new RegExp(
 													"^1[3456789]\\d{9}$");
