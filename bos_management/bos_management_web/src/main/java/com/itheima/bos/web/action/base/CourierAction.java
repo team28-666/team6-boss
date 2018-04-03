@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -28,8 +29,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 
 import com.itheima.bos.domain.base.Courier;
+import com.itheima.bos.domain.base.FixedArea;
 import com.itheima.bos.domain.base.Standard;
 import com.itheima.bos.service.base.CourierService;
+import com.itheima.bos.service.base.FixedAreaService;
 import com.itheima.bos.web.action.CommonAction;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
@@ -63,6 +66,8 @@ public class CourierAction extends CommonAction<Courier> {
         return SUCCESS;
     }
 
+    
+    
     @Action("courierAction_pageQuery")
     public String pageQuery() throws IOException {
 

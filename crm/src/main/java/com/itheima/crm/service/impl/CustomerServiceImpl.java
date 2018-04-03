@@ -94,4 +94,9 @@ public class CustomerServiceImpl implements CustomerService {
 
         return customerRepository.findFixedAreaIdByAdddress(address);
     }
+
+    @Override
+    public Customer checkCustomer(String telephone) {
+        return customerRepository.findByTelephone(telephone);
+    }
 }

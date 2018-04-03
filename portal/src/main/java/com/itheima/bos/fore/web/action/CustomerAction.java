@@ -226,5 +226,32 @@ public class CustomerAction extends ActionSupport
         return ERROR;
 
     }
+    //异步校验手机号
+    @Action(value = "customerAction_checkTelephone")
+    public String checkTelephone() throws IOException {
+        if (StringUtils.isNotEmpty(model.getTelephone())){
+
+            Customer customer = WebClient.create("http://localhost:8180/crm/webService/customerService/checkCustomer")
+                    .type(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .query("telephone", model.getTelephone())
+                    .get(Customer.class);
+            if (customer == null ){
+                ServletActionContext.getResponse().getWriter().write("1");
+                return NONE;
+            }
+        }
+        return NONE;
+    }
+
+    //异步校验验证码
+    @Action(value = "customerAction_checkValidateCode")
+    public String checkValidateCode() throws IOException {
+        String validateCode = (String) ServletActionContext.getRequest().getSession().getAttribute("validateCode");
+        if (checkcode != null && checkcode.equals(validateCode)){
+            ServletActionContext.getResponse().getWriter().write("1");
+        }
+        return NONE;
+    }
 
 }
