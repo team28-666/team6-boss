@@ -1,5 +1,6 @@
 package com.itheima.bos.service.base.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -77,5 +78,11 @@ public class SubAreaServiceImpl implements SubAreaService {
             }};
         Page<SubArea> page = subAreaRepository.findAll(specification, pageable);
         return page;
+    }
+
+    //保存SubArea数组对象
+    @Override
+    public void save(ArrayList<SubArea> list) {
+        subAreaRepository.save(list);
     }
 }
