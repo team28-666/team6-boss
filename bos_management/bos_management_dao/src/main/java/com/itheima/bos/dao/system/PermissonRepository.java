@@ -31,6 +31,5 @@ public interface PermissonRepository extends JpaRepository<Permission, Long> {
     @Query("select p from Permission p inner join p.roles r where r.id=?")
     List<Permission> findbyRoleId(Long id);
 
-    /*@Query(value="SELECT *  FROM T_PERMISSION  WHERE C_ID NOT IN ( SELECT C_PERMISSION_ID  FROM T_ROLE_PERMISSION WHERE c_role_id =?)",nativeQuery=true)
-    List<Permission> findbyNotRoleId(Long id);*/
+    
 }

@@ -104,13 +104,5 @@ public class PermissionAction extends CommonAction<Permission> {
         return NONE;
     }
 
-    /*
-     * @Action(value = "permissionAction_findUnAssociatedRole") public String findUnAssociatedRole()
-     * throws IOException { // 获取当前用户 List<Permission> list=
-     * permissionService.findbyNotRole(getModel().getId());
-     * 
-     * JsonConfig jsonConfig = new JsonConfig(); jsonConfig.setExcludes( new String[] {"roles"});
-     * 
-     * list2json(list, jsonConfig); return NONE; }
-     */
+    
 }
