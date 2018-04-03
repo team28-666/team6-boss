@@ -37,7 +37,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     @Modifying
     void active(String telephone);
 
-    // 查看用户是否激活
+    // 查看用户是否激活或存在
     Customer findByTelephone(String telephone);
 
     // 登录

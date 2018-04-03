@@ -2,6 +2,7 @@ package com.itheima.bos.web.action.base;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.core.MediaType;
 
@@ -17,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 
+import com.itheima.bos.domain.base.Courier;
 import com.itheima.bos.domain.base.FixedArea;
 import com.itheima.bos.service.base.FixedAreaService;
 import com.itheima.bos.web.action.CommonAction;
@@ -162,4 +164,26 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
 
         return SUCCESS;
     }
+   
+   
+    
+    // 查找已关联了定区的快递员
+    @Action(value = "fixedAreaAction_findAssociatedCourier")
+    public String findAssociatedCourier() throws IOException {
+        
+        List<Courier> list = fixedAreaService.findAssociatedCourier(getModel().getId());
+        
+        JsonConfig jsonConfig = new JsonConfig();
+        jsonConfig.setExcludes(new String[] {"fixedAreas"});
+        list2json(list, jsonConfig);
+        
+        return NONE;
+    }
+    
+    
+    
+    
+    
+    
+    
 }
