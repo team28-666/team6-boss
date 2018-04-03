@@ -2,6 +2,7 @@ package com.itheima.bos.service.base;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import com.itheima.bos.domain.base.Vehicle;
 
@@ -17,6 +18,8 @@ public interface VehicleService {
     Page<Vehicle> findAll(Pageable pageable);
 
     void deleteById(String ids);
+
+    Page<Vehicle> findAll(Specification<Vehicle> specification, Pageable pageable);
 
 }
   

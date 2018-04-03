@@ -89,7 +89,16 @@
 					}
 					
 				}
+			}, {
+				id : 'button-search',
+				text : '搜索',
+				iconCls : 'icon-search',
+				handler:function(){
+					$("#searchWindow").window("open")
+				}
 			} ];
+			
+			
 			
 			// 定义列
 			var columns = [ [ {
@@ -141,18 +150,55 @@
 				width : 120,
 				align : 'center'
 			} ] ];
+			
+
+			
 </script>
 
 <script type="text/javascript">
-	function submitData() {
-		// 校验表单中必填项是否都已经填写了
-		var result = $("#vehicleForm").form("validate")
-		if (result) {
-			// 	提交表单
-			$("#vehicleForm").submit()
-		}
+function submitData() {
+	// 校验表单中必填项是否都已经填写了
+	var result = $("#vehicleForm").form("validate")
+	if (result) {
+		// 	提交表单
+		$("#vehicleForm").submit()
 	}
+}
+
+
+
+$.fn.serializeJson = function() {
+	var serializeObj = {};
+	var array = this.serializeArray();
+	var str = this.serialize();
+	$(array).each(
+			function() {
+				if (serializeObj[this.name]) {
+					if ($.isArray(serializeObj[this.name])) {
+						serializeObj[this.name].push(this.value);
+					} else {
+						serializeObj[this.name] = [
+								serializeObj[this.name], this.value ];
+					}
+				} else {
+					serializeObj[this.name] = this.value;
+				}
+			});
+	return serializeObj;
+};
+
+
+// 执行查询
+function doSearch() {
+	// 把form表单中input节点的name的值和用户输入的内容,拼接成json字符串
+	var result = $("#searchForm").serializeJson();
+	// 让Datagrid重新发起请求,并把用户输入的查询条件传递给后台
+	$('#grid').datagrid('load', result);
+
+}
+
 </script>
+
 
 </head>
 	<body class="easyui-layout" style="visibility:hidden;">
@@ -219,6 +265,57 @@
 						<td >备注</td>
 						<td ><input type="text" name="remark"
 							class="easyui-validatebox" required="true" /></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+		
+			<!-- 查询班车-->
+	<div class="easyui-window" title="查询班车窗口" closed="true" modal="true"
+		id="searchWindow" collapsible="false" minimizable="false"
+		maximizable="false" style="width: 400px; top: 40px; left: 200px">
+		<div style="overflow: auto; padding: 5px;" border="false">
+			<form id="searchForm">
+				<table class="table-edit" width="80%" align="center">
+					<tr class="title">
+						<td colspan="2">查询条件</td>
+					</tr>
+					<tr>
+						<td>路线类型</td>
+						<td>
+							<input type="text" name="routeType" />
+						</td>
+					</tr>
+					<tr>
+						<td>路线名称</td>
+						<td>
+							<input type="text" name="routeName" />
+						</td>
+					</tr>
+					<tr>
+						<td>承运商</td>
+						<td>
+							<input type="text" name="shipper" />
+						</td>
+					</tr>
+					<tr>
+						<td>车型</td>
+						<td>
+							<input type="text" name="vehicleType" />
+						</td>
+					</tr>
+					<tr>
+						<td>吨数</td>
+						<td>
+							<input type="text" name="ton" />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<a id="searchBtn" href="#" onclick="doSearch()"
+								class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
+						</td>
 					</tr>
 				</table>
 			</form>

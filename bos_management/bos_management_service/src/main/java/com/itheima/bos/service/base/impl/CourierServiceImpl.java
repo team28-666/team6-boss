@@ -42,7 +42,7 @@ public class CourierServiceImpl implements CourierService {
     }
 
     // 批量删除
-    @RequiresPermissions("batchDel")
+//    @RequiresPermissions("batchDel")
     // 在调用方法时,框架就会检查当前用户是否有对应的权限,如果有就放行,没有就抛异常
     @Override
     public void batchDel(String ids) {
@@ -64,6 +64,7 @@ public class CourierServiceImpl implements CourierService {
     public Page<Courier> findAll(Specification<Courier> specification,
             Pageable pageable) {
         return courierRepository.findAll(specification, pageable);
+        
     }
 
     @Override
