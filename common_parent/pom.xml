@@ -297,11 +297,18 @@
 			<artifactId>itext</artifactId>
 			<version>2.1.7</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.itheima</groupId>
 			<artifactId>itextasain</artifactId>
 			<version>10.2.0.2.0</version>
-		</dependency>
+		</dependency> -->
+		      <dependency>
+        	<groupId>com.itextpdf</groupId>
+        	<artifactId>itext-asian</artifactId>
+        	<version>5.2.0</version>
+        </dependency>
+		
+
 
 
 		<!-- groovy -->
