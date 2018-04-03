@@ -21,17 +21,23 @@
 	<script type="text/javascript" src="../../js/highcharts/highcharts-zh_CN.js"></script>
 	<script type="text/javascript">
         function doAdd() {
+            //清除表单数据
+            $("#addWindow").form("clear");
             $('#addWindow').window("open");
         }
 
         function doEdit() {
             //获取用户选择的行数,如果不为1,弹出警告,否则弹出修改框
             var rows = $("#grid").datagrid("getSelections");
+
             if (rows.length == 1){
                 //弹出修改框
                 $("#addWindow").window("open");
                 //回填数据
                 $("#subareaForm").form("load",rows[0]);
+                //区域下拉框回显
+                $("#areaId").combobox("select",rows[0].area.id);
+                $("#single").combobox("select",rows[0].single);
                 //$("#subAreaId").val(rows[0].id)
             } else{
                 $.messager.alert('消息','请选择一行数据进行修改','info');
@@ -205,7 +211,16 @@
             field : 'single',
             title : '单双号',
             width : 100,
-            align : 'center'
+            align : 'center',
+            formatter : function(data, row, index) {
+                if (row.single == 0) {
+                    return "单双号";
+                }
+                if (row.single == 1) {
+                    return "单号";
+                }
+                return "双号";
+            }
         }, {
             field : 'assistKeyWords',
             title : '辅助关键字',
@@ -312,7 +327,7 @@
 				</tr>
 				<tr>
 					<td>选择区域</td>
-					<td><input class="easyui-combobox" name="area.id"
+					<td><input class="easyui-combobox" name="area.id" id="areaId"
 							   data-options="valueField:'id',textField:'name',mode:'remote',
 									 url:'../../areaAction_findAll.action'" />
 					</td>
@@ -339,7 +354,7 @@
 				</tr>
 				<tr>
 					<td>单双号</td>
-					<td><select class="easyui-combobox" name="single"
+					<td><select class="easyui-combobox" name="single" id="single"
 								style="width: 150px;">
 						<option value="0">单双号</option>
 						<option value="1">单号</option>
